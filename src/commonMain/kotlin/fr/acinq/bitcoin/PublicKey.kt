@@ -22,6 +22,7 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 
 public data class PublicKey(@JvmField val value: ByteVector) {
+
     public constructor(data: ByteArray) : this(ByteVector(data))
 
     public operator fun plus(that: PublicKey): PublicKey {

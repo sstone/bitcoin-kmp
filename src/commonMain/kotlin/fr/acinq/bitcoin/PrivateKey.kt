@@ -22,6 +22,10 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 
 public data class PrivateKey(@JvmField val value: ByteVector32) {
+    init {
+        require(Crypto.isPrivateKeyValid(value.toByteArray()))
+    }
+    
     public constructor(data: ByteArray) : this(
         when {
             data.size == 32 -> ByteVector32(data.copyOf())

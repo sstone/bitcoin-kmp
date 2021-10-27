@@ -26,10 +26,22 @@ import org.kodein.memory.use
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @OptIn(ExperimentalStdlibApi::class)
 class CryptoTestsCommon {
+    @Test
+    fun `validate private keys`() {
+        assertFalse { Crypto.isPrivateKeyValid(Hex.decode("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")) }
+    }
+
+    @Test
+    fun `validate public keys`() {
+        assertFalse { Crypto.isPubKeyValid(Hex.decode("02FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")) }
+        assertFalse { Crypto.isPubKeyValid(Hex.decode("04AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")) }
+    }
+
     @Test
     fun `import private keys`() {
         // exported from the bitcoin client running in testnet mode

@@ -93,10 +93,14 @@ public object Crypto {
     }
 
     @JvmStatic
-    public fun isPubKeyValid(key: ByteArray): Boolean = when {
-        key.size == 65 && (key[0] == 4.toByte() || key[0] == 6.toByte() || key[0] == 7.toByte()) -> true
-        key.size == 33 && (key[0] == 2.toByte() || key[0] == 3.toByte()) -> true
-        else -> false
+    public fun isPrivateKeyValid(key: ByteArray): Boolean = Secp256k1.secKeyVerify(key)
+
+    @JvmStatic
+    public fun isPubKeyValid(key: ByteArray): Boolean = try {
+        Secp256k1.pubkeyParse(key)
+        true
+    } catch (t: Throwable) {
+        false
     }
 
     @JvmStatic
