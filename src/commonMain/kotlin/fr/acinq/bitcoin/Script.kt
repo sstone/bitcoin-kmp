@@ -124,7 +124,7 @@ public object Script {
                     return write(tail, out)
                 }
                 else -> {
-                    out.write(ScriptEltMapping.elt2code.getValue(head))
+                    out.write(head.code)
                     return write(tail, out)
                 }
             }
@@ -153,7 +153,7 @@ public object Script {
     @JvmStatic
     public fun simpleValue(op: ScriptElt): Byte {
         require(isSimpleValue(op)) {}
-        val value = if (op == OP_0) 0 else (ScriptEltMapping.elt2code.getValue(op) - 0x50)
+        val value = if (op == OP_0) 0 else (op.code - 0x50)
         return value.toByte()
     }
 
@@ -283,7 +283,7 @@ public object Script {
 
     @JvmStatic
     public fun isPayToScript(script: ByteArray): Boolean =
-        script.size == 23 && script[0] == ScriptEltMapping.elt2code.getValue(OP_HASH160).toByte() && script[1] == 0x14.toByte() && script[22] == ScriptEltMapping.elt2code.getValue(OP_EQUAL).toByte()
+        script.size == 23 && script[0] == OP_HASH160.code.toByte() && script[1] == 0x14.toByte() && script[22] == OP_EQUAL.code.toByte()
 
     @JvmStatic
     public fun isNativeWitnessScript(script: List<ScriptElt>): Boolean = when {
@@ -1532,7 +1532,7 @@ public object Script {
 
                             tailrec fun hasOpSuccess(it: Iterator<ScriptElt>) : Boolean = when {
                                 !it.hasNext() -> false
-                                isOpSuccess(ScriptEltMapping.opCode(it.next())) -> true
+                                isOpSuccess(it.next().code) -> true
                                 else -> hasOpSuccess(it)
                             }
 
