@@ -21,7 +21,7 @@ import fr.acinq.secp256k1.Hex
 import fr.acinq.secp256k1.Secp256k1
 import org.kodein.memory.file.openReadableFile
 import org.kodein.memory.file.resolve
-import org.kodein.memory.io.readLine
+import org.kodein.memory.text.readLine
 import org.kodein.memory.use
 import kotlin.random.Random
 import kotlin.test.*
@@ -231,7 +231,7 @@ class CryptoTestsCommon {
     }
 
     @Test
-    fun `recover public keys from signatures (random tests)`() {
+    fun `recover public keys from signatures -- random tests`() {
         val random = Random
         val privbytes = ByteArray(32)
         val message = ByteArray(32)
@@ -251,7 +251,7 @@ class CryptoTestsCommon {
     }
 
     @Test
-    fun `recover public keys from signatures (secp256k1 test)`() {
+    fun `recover public keys from signatures -- secp256k1 test`() {
         var priv: PrivateKey? = null
         var message: ByteVector? = null
         var pub: PublicKey? = null
