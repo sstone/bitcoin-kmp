@@ -44,14 +44,24 @@ public data class PrivateKey(@JvmField val value: ByteVector32) {
      */
     public fun isValid(): Boolean = Crypto.isPrivKeyValid(value.toByteArray())
 
-    public operator fun plus(that: PrivateKey): PrivateKey = PrivateKey(Secp256k1.privKeyTweakAdd(value.toByteArray(), that.value.toByteArray()))
+    public operator fun plus(that: PrivateKey): PrivateKey = when {
+        this.value == ByteVector32.Zeroes -> that
+        that.value == ByteVector32.Zeroes -> this
+        else -> PrivateKey(Secp256k1.privKeyTweakAdd(value.toByteArray(), that.value.toByteArray()))
+    }
 
-    public operator fun unaryMinus(): PrivateKey = PrivateKey(Secp256k1.privKeyNegate(value.toByteArray()))
+    public operator fun unaryMinus(): PrivateKey = when {
+        this.value == ByteVector32.Zeroes -> this
+        else -> PrivateKey(Secp256k1.privKeyNegate(value.toByteArray()))
+    }
 
     public operator fun minus(that: PrivateKey): PrivateKey = plus(-that)
 
-    public operator fun times(that: PrivateKey): PrivateKey =
-        PrivateKey(Secp256k1.privKeyTweakMul(value.toByteArray(), that.value.toByteArray()))
+    public operator fun times(that: PrivateKey): PrivateKey = when {
+        this.value == ByteVector32.Zeroes -> PrivateKey(ByteVector32.Zeroes)
+        that.value == ByteVector32.Zeroes -> PrivateKey(ByteVector32.Zeroes)
+        else -> PrivateKey(Secp256k1.privKeyTweakMul(value.toByteArray(), that.value.toByteArray()))
+    }
 
     public fun tweak(tweak: ByteVector32): PrivateKey {
         val key = if (publicKey().isEven()) this else -this
